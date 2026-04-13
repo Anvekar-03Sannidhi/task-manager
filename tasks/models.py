@@ -1,4 +1,5 @@
 from django.db import models #models = blueprint for DB
+from django.contrib.auth.models import User #importing User model to link tasks to specific users (if needed)
 
 # Create your models(table) here.
 
@@ -23,3 +24,6 @@ class Task(models.Model): #Database table for tasks-> connected to admin panel->
 
     def __str__(self): #This controls how object appears in admin panel
         return self.title
+    
+    #ForeignKey creates a relationship between Task and User models,
+    user = models.ForeignKey(User, on_delete=models.CASCADE) # on_delete=models.CASCADE means if user is deleted, all their tasks will also be deleted (cascading delete)

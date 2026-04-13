@@ -1,0 +1,40 @@
+<h2>Dashboard</h2>
+
+<p>Total Tasks: {{ total_tasks }}</p>
+<p>Completed Tasks: {{ completed_tasks }}</p>
+<p>Pending Tasks: {{ pending_tasks }}</p>
+
+<h2>Your Tasks</h2>
+
+{% for task in tasks %}
+    <p>
+        {{ task.title }} - {{ task.status }} - {{ task.priority }}
+        <a href="/edit-task/{{ task.id }}/">Edit</a>
+        <a href="/delete-task/{{ task.id }}/">Delete</a>
+    </p>
+{% empty %}
+    <p>No tasks found</p>
+{% endfor %}
+
+<h3>Search Task</h3>
+
+<form method="GET">
+    
+    <input type="text" name="search" placeholder="Search by title">
+
+    <select name="status">
+        <option value="">All Status</option>
+        <option value="PENDING">Pending</option>
+        <option value="COMPLETED">Completed</option>
+    </select>
+
+    <select name="priority">
+        <option value="">All Priority</option>
+        <option value="LOW">Low</option>
+        <option value="MEDIUM">Medium</option>
+        <option value="HIGH">High</option>
+    </select>
+
+    <button type="submit">Apply</button>
+
+</form>
