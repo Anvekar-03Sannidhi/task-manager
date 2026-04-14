@@ -6,6 +6,9 @@ from .models import Task
 from django.shortcuts import render, redirect
 
 # Create your views here.
+def home(request):
+    return render(request, 'home.html')
+
 def signup(request):
     if request.method == 'POST':
         username = request.POST.get('username')

@@ -1,0 +1,60 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Task Manager</title>
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+    <h2>TaskFlow</h2>
+
+    <div class="nav-links">
+        <a href="#">Features</a>
+        <a href="#">About</a>
+        <a href="/login/" class="btn login">Login</a>
+        <a href="/signup/" class="btn signup">Get Started</a>
+    </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+
+    <div class="hero-text">
+        <h1>Streamline Your Workflow</h1>
+        <p>Manage tasks, stay productive, and achieve more every day.</p>
+
+        <div class="buttons">
+            <a href="/signup/" class="btn primary">Start for Free</a>
+            <a href="/login/" class="btn secondary">Login</a>
+        </div>
+    </div>
+
+</section>
+
+<!-- FEATURES -->
+<section class="features">
+
+    <div class="feature-card">
+        <h3>Task Management</h3>
+        <p>Organize tasks efficiently</p>
+    </div>
+
+    <div class="feature-card">
+        <h3>Productivity</h3>
+        <p>Stay focused and consistent</p>
+    </div>
+
+    <div class="feature-card">
+        <h3>Easy Tracking</h3>
+        <p>Track progress in real-time</p>
+    </div>
+
+</section>
+
+</body>
+</html>

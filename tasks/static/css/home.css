@@ -1,0 +1,161 @@
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* Navbar */
+.navbar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 20px 50px;
+
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+
+    color: white;
+    z-index: 10;
+}
+
+a {
+    text-decoration: none;
+}
+
+.nav-links a {
+    color: white;
+    margin: 0 10px;
+    font-weight: 500;
+}
+
+/* Hero */
+.hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 80px;
+    height: 100vh;
+
+    background:
+        linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)),
+        url('../images/bg.jpg');
+
+    background-size: cover;
+    background-position: center;
+
+    color: white;
+}
+
+.hero-text {
+    max-width: 500px;
+}
+
+.hero-text h1 {
+    font-size: 56px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.hero-text p {
+    margin: 20px 0;
+    color: #ddd;
+    font-size: 18px;
+}
+
+.hero-image img {
+    width: 450px;
+    max-width: 100%;
+}
+
+/* Buttons */
+.btn {
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-weight: 500;
+    display: inline-block;
+    transition: 0.3s;
+}
+
+.btn.signup {
+    background: #116152;
+    color: white;
+}
+
+/* hover */
+.btn.signup:hover {
+    background: #115147;
+}
+
+.btn.login {
+    border: 1px solid white;
+    color: white;
+}
+
+/* hover */
+.btn.login:hover {
+    background: rgba(255,255,255,0.1);
+}
+
+/* Hover */
+.btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.buttons a {
+    text-decoration: none;
+}
+
+.primary {
+    background: #104137;
+    color: white;
+}
+
+.primary:hover {
+    background: #0c322b;
+    transform: translateY(-2px);
+}
+
+.secondary {
+    background: white;
+    color: black;
+}
+
+.secondary:hover {
+    background: #eaeaea;
+    transform: translateY(-2px);
+}
+
+/* Features */
+.features {
+    display: flex;
+    justify-content: space-around;
+    padding: 60px 40px;
+
+    background: black;
+}
+
+.feature-card {
+    background: rgba(255, 255, 255, 0.08);
+    color: white;
+
+    padding: 25px;
+    border-radius: 15px;
+    width: 250px;
+    text-align: center;
+
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.1);
+
+    transition: 0.3s;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+}

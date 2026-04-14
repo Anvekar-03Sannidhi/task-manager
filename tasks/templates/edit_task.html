@@ -1,24 +1,40 @@
-<h2>Edit Task</h2>
+{% extends 'base.html' %}
+{% load static %}
 
-<form method="POST">
-    {% csrf_token %}
-    
-    <input type="text" name="title" value="{{ task.title }}"><br><br>
-    
-    <textarea name="description">{{ task.description }}</textarea><br><br>
-    
-    <select name="priority">
-        <option value="LOW">Low</option>
-        <option value="MEDIUM">Medium</option>
-        <option value="HIGH">High</option>
-    </select><br><br>
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/forms.css' %}">
+{% endblock %}
 
-    <select name="status">
-        <option value="PENDING">Pending</option>
-        <option value="COMPLETED">Completed</option>
-    </select><br><br>
+{% block content %}
 
-    <input type="datetime-local" name="deadline"><br><br>
-    
-    <button type="submit">Update Task</button>
-</form>
+<div class="form-container">
+    <div class="form-card">
+
+        <h2>Edit Task</h2>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <input type="text" name="title" value="{{ task.title }}">
+            <textarea name="description">{{ task.description }}</textarea>
+
+            <select name="priority">
+                <option value="LOW">Low</option>
+                <option value="MEDIUM">Medium</option>
+                <option value="HIGH">High</option>
+            </select>
+
+            <select name="status">
+                <option value="PENDING">Pending</option>
+                <option value="COMPLETED">Completed</option>
+            </select>
+
+            <input type="datetime-local" name="deadline">
+
+            <button type="submit">Update Task</button>
+        </form>
+
+    </div>
+</div>
+
+{% endblock %}
