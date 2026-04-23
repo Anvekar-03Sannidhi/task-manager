@@ -11,6 +11,8 @@
 <body>
 
     <!-- Navbar -->
+    {% if request.path != '/login/' and request.path != '/signup/' %}
+
     <header>
         <div>
             <h2>Task Manager</h2>
@@ -19,6 +21,8 @@
             <a href="/logout/">Logout</a>
         </div>
     </header>
+
+    {% endif %}
 
     <main>
         {% block content %}

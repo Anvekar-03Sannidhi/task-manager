@@ -2,79 +2,77 @@
 {% load static %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/task.css' %}">
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
 {% endblock %}
 
 {% block content %}
 
-<!-- Dashboard -->
-<section class="dashboard">
+<div class="dashboard">
 
-    <div class="dashboard-card">
-        <h4>Total Tasks</h4>
-        <p>{{ total_tasks }}</p>
+    <!-- HEADER -->
+    <div class="dashboard-header">
+        <h2>Dashboard</h2>
+        <a href="/create-task/" class="btn primary">+ Add Task</a>
     </div>
 
-    <div class="dashboard-card">
-        <h4>Completed</h4>
-        <p>{{ completed_tasks }}</p>
+    <!-- STATS -->
+    <div class="stats">
+        <div class="stat-card green">
+            <h3>{{ total_tasks }}</h3>
+            <p>Total Tasks</p>
+        </div>
+
+        <div class="stat-card">
+            <h3>{{ completed_tasks }}</h3>
+            <p>Completed</p>
+        </div>
+
+        <div class="stat-card">
+            <h3>{{ pending_tasks }}</h3>
+            <p>Pending</p>
+        </div>
     </div>
 
-    <div class="dashboard-card">
-        <h4>Pending</h4>
-        <p>{{ pending_tasks }}</p>
+    <!-- MAIN GRID -->
+    <div class="main-grid">
+
+        <!-- TASKS -->
+        <div class="tasks-section">
+            {% for task in tasks %}
+            <div class="task-card">
+                <h4>{{ task.title }}</h4>
+                <p>{{ task.description }}</p>
+
+                <div class="task-meta">
+                    <span>{{ task.status }}</span>
+                    <span>{{ task.priority }}</span>
+                </div>
+
+                <div class="task-actions">
+                    <a href="/edit-task/{{ task.id }}/">Edit</a>
+                    <a href="/delete-task/{{ task.id }}/">Delete</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- RIGHT PANEL -->
+        <div class="side-panel">
+
+            <div class="reminder-card">
+                <h4>Reminder</h4>
+                <p>Meeting with team</p>
+                <button class="btn primary">Start</button>
+            </div>
+
+            <div class="quick-info">
+                <p>Stay productive 🚀</p>
+            </div>
+
+        </div>
+
     </div>
 
-</section>
-
-<!-- Create Button -->
-<div class="create-task">
-    <a href="/create-task/" class="btn create">+ Create Task</a>
 </div>
-
-<section class="filter-bar">
-
-    <form method="GET" class="filter-form">
-
-        <input type="text" name="search" placeholder="🔍 Search tasks">
-
-        <select name="status">
-            <option value="">All Status</option>
-            <option value="PENDING">Pending</option>
-            <option value="COMPLETED">Completed</option>
-        </select>
-
-        <select name="priority">
-            <option value="">All Priority</option>
-            <option value="LOW">Low</option>
-            <option value="MEDIUM">Medium</option>
-            <option value="HIGH">High</option>
-        </select>
-
-        <button type="submit">Apply</button>
-
-    </form>
-
-</section>
-
-<!-- TASK LIST -->
-{% for task in tasks %}
-<article class="task-card">
-
-    <h3>{{ task.title }}</h3>
-    <p>{{ task.description }}</p>
-
-    <div class="task-meta">
-        <span class="status {{ task.status|lower }}">{{ task.status }}</span>
-        <span class="priority {{ task.priority|lower }}">{{ task.priority }}</span>
-    </div>
-
-    <div class="task-actions">
-        <a href="/edit-task/{{ task.id }}/" class="btn edit">Edit</a>
-        <a href="/delete-task/{{ task.id }}/" class="btn delete">Delete</a>
-    </div>
-
-</article>
-{% endfor %}
 
 {% endblock %}
