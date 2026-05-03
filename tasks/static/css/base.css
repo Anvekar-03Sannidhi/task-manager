@@ -30,3 +30,90 @@ header a {
 header a:hover {
     text-decoration: underline;
 }
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: #0b0f0f;
+    color: white;
+}
+
+/* Layout */
+.app-layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 230px;
+    background: #0f1a1a;
+    padding: 25px 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-right: 1px solid rgba(255,255,255,0.05);
+}
+
+/* Logo */
+.logo {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 30px;
+}
+
+/* Links */
+.nav-links {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.nav-links a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    padding: 10px 12px;
+    border-radius: 10px;
+
+    text-decoration: none;
+    color: #ccc;
+
+    transition: 0.2s;
+}
+
+/* Hover */
+.nav-links a:hover {
+    background: rgba(255,255,255,0.05);
+    color: white;
+}
+
+/* Active */
+.nav-links a.active {
+    background: #104137;
+    color: white;
+}
+
+/* Logout */
+.logout a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    padding: 10px 12px;
+    border-radius: 10px;
+
+    text-decoration: none;
+    color: #ccc;
+}
+
+.logout a:hover {
+    background: rgba(255,255,255,0.05);
+    color: #ff6b6b;
+}
+
+/* Remove default link styles globally */
+a {
+    text-decoration: none !important;
+}

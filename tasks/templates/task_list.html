@@ -11,27 +11,50 @@
 
     <!-- HEADER -->
     <div class="dashboard-header">
+
         <h2>Dashboard</h2>
+
+        <!-- SEARCH BAR -->
+        <form method="GET" class="search-box">
+            <div class="search-wrapper">
+                <span class="search-icon">🔍</span>
+                <input type="text" name="search" placeholder="Search tasks...">
+            </div>
+        </form>
+
+        <!-- ADD TASK -->
         <a href="/create-task/" class="btn primary">+ Add Task</a>
+
     </div>
 
     <!-- STATS -->
     <div class="stats">
-        <div class="stat-card green">
-            <h3>{{ total_tasks }}</h3>
-            <p>Total Tasks</p>
-        </div>
 
-        <div class="stat-card">
-            <h3>{{ completed_tasks }}</h3>
-            <p>Completed</p>
-        </div>
-
-        <div class="stat-card">
-            <h3>{{ pending_tasks }}</h3>
-            <p>Pending</p>
-        </div>
+    <div class="stat-card {% if not request.GET.filter or request.GET.filter == 'ALL' %}active{% endif %}">
+        <h3>{{ total_tasks }}</h3>
+        <p>Total Tasks</p>
     </div>
+
+    <div class="stat-card {% if request.GET.filter == 'COMPLETED' %}active{% endif %}">
+        <h3>{{ completed_tasks }}</h3>
+        <p>Completed</p>
+    </div>
+
+    <div class="stat-card {% if request.GET.filter == 'PENDING' %}active{% endif %}">
+        <h3>{{ pending_tasks }}</h3>
+        <p>Pending</p>
+    </div>
+
+</div>
+
+    <!-- Filters -->
+    <div class="filters">
+        <a href="/tasks/?filter=ALL">All</a>
+        <a href="/tasks/?filter=PENDING">Pending</a>
+        <a href="/tasks/?filter=COMPLETED">Completed</a>
+    </div>
+
+</div>
 
     <!-- MAIN GRID -->
     <div class="main-grid">

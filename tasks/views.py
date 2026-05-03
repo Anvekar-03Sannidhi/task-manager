@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from .models import Task
 from django.shortcuts import render, redirect
+from django.utils import timezone
 
 # Create your views here.
 def home(request):
@@ -52,34 +53,40 @@ def logout_view(request):
 
 @login_required
 def task_list(request):
+
+    # GET FILTER
+    filter_type = request.GET.get('filter', 'ALL').upper()
+
+    # BASE QUERY
     tasks = Task.objects.filter(user=request.user)
-    
-    status = request.GET.get('status')
-    priority = request.GET.get('priority')
+
+    # APPLY FILTER
+    if filter_type == "PENDING":
+        tasks = tasks.filter(status="PENDING")
+
+    elif filter_type == "COMPLETED":
+        tasks = tasks.filter(status="COMPLETED")
+
+    # SEARCH (keep if you already had it)
     search = request.GET.get('search')
-
-    if status:
-        tasks = tasks.filter(status=status)
-
-    if priority:
-        tasks = tasks.filter(priority=priority)
-
     if search:
         tasks = tasks.filter(title__icontains=search)
 
-    #Dashboard datas
+    # STATS
     total_tasks = Task.objects.filter(user=request.user).count()
     completed_tasks = Task.objects.filter(user=request.user, status='COMPLETED').count()
     pending_tasks = Task.objects.filter(user=request.user, status='PENDING').count()
 
+    # 👇 THIS IS WHERE YOU ADD FILTER IN CONTEXT
     context = {
-        'tasks' :tasks,
+        'tasks': tasks,
+        'filter': filter_type,   # ⭐ THIS LINE
         'total_tasks': total_tasks,
         'completed_tasks': completed_tasks,
-        'pending_tasks': pending_tasks
+        'pending_tasks': pending_tasks,
     }
 
-    return render(request, 'task_list.html', context)
+    return render(request, 'task_list.html', context)  
 
 @login_required
 def create_task(request):

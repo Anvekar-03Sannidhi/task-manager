@@ -12,16 +12,101 @@ body {
 /* Header */
 .dashboard-header {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    margin-bottom: 25px;
+    gap: 20px;
 }
 
-/* Stats */
+/* Title */
+.dashboard-header h2 {
+    min-width: 150px;
+}
+
+/* ================= SEARCH BAR ================= */
+
+/* Container */
+.search-box {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+/* Wrapper (Google style) */
+.search-wrapper {
+    display: flex;
+    align-items: center;
+
+    width: 100%;
+    max-width: 650px;
+
+    padding: 12px 18px;
+
+    border-radius: 999px;
+
+    background: #1a1f1f;
+
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+
+    transition: 0.3s;
+}
+
+/* Icon */
+.search-icon {
+    margin-right: 10px;
+    font-size: 14px;
+    color: #aaa;
+}
+
+/* Input */
+.search-wrapper input {
+    flex: 1;
+
+    border: none;
+    outline: none;
+
+    background: transparent;
+    color: white;
+
+    font-size: 15px;
+}
+
+/* Placeholder */
+.search-wrapper input::placeholder {
+    color: #aaa;
+}
+
+/* Hover */
+.search-wrapper:hover {
+    background: #202626;
+}
+
+/* Focus */
+.search-wrapper:focus-within {
+    background: #202626;
+    box-shadow: 0 0 0 2px rgba(16, 65, 55, 0.6),
+                0 6px 16px rgba(0,0,0,0.5);
+}
+
+/* ================= BUTTON ================= */
+
+.btn.primary {
+    background: #104137;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 25px;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.btn.primary:hover {
+    background: #0c322b;
+}
+
+/* ================= STATS ================= */
+
 .stats {
     display: flex;
     gap: 20px;
-    margin-bottom: 30px;
+    margin: 30px 0;
 }
 
 .stat-card {
@@ -36,14 +121,16 @@ body {
     background: #104137;
 }
 
-/* Grid */
+/* ================= GRID ================= */
+
 .main-grid {
     display: grid;
     grid-template-columns: 2fr 1fr;
     gap: 20px;
 }
 
-/* Tasks */
+/* ================= TASKS ================= */
+
 .tasks-section {
     display: grid;
     gap: 15px;
@@ -53,6 +140,12 @@ body {
     background: rgba(255,255,255,0.08);
     padding: 15px;
     border-radius: 12px;
+    transition: 0.3s;
+}
+
+.task-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
 }
 
 .task-meta {
@@ -69,9 +162,15 @@ body {
 .task-actions a {
     margin-right: 10px;
     font-size: 13px;
+    text-decoration: none;
 }
 
-/* Side panel */
+.task-actions a:hover {
+    text-decoration: underline;
+}
+
+/* ================= SIDE PANEL ================= */
+
 .side-panel {
     display: flex;
     flex-direction: column;
@@ -89,4 +188,25 @@ body {
     padding: 20px;
     border-radius: 12px;
     text-align: center;
+}
+
+/* Default card */
+.stat-card {
+    flex: 1;
+    padding: 20px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.08);
+    text-align: center;
+    transition: 0.3s;
+}
+
+/* ACTIVE (GREEN) */
+.stat-card.active {
+    background: #104137;
+    color: white;
+}
+
+/* Hover effect */
+.stat-card:hover {
+    transform: translateY(-5px);
 }
