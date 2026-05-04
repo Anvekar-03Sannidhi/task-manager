@@ -77,6 +77,12 @@ def task_list(request):
     completed_tasks = Task.objects.filter(user=request.user, status='COMPLETED').count()
     pending_tasks = Task.objects.filter(user=request.user, status='PENDING').count()
 
+    # Calculate progress %
+    if total_tasks > 0:
+        progress = int((completed_tasks / total_tasks) * 100)
+    else:
+        progress = 0
+
     # 👇 THIS IS WHERE YOU ADD FILTER IN CONTEXT
     context = {
         'tasks': tasks,
@@ -84,6 +90,7 @@ def task_list(request):
         'total_tasks': total_tasks,
         'completed_tasks': completed_tasks,
         'pending_tasks': pending_tasks,
+        'progress': progress,
     }
 
     return render(request, 'task_list.html', context)  
@@ -128,4 +135,16 @@ def edit_task(request, id):
 def delete_task(request, id):
     task = Task.objects.get(id=id, user=request.user)
     task.delete()
+    return redirect('/tasks/')
+
+def complete_task(request, id):
+    task = Task.objects.get(id=id)
+    task.status = "COMPLETED"
+    task.save()
+    return redirect('/tasks/')
+
+def skip_task(request, id):
+    task = Task.objects.get(id=id)
+    task.status = "SKIPPED"
+    task.save()
     return redirect('/tasks/')
