@@ -242,69 +242,68 @@ body {
 
 .goal-tracker {
     background: rgba(255,255,255,0.08);
-    padding: 20px;
+    padding: 25px;
     border-radius: 12px;
     text-align: center;
 }
 
-/* Semi-circle container */
-.semi-circle {
+/* Circle container */
+.progress-circle {
     position: relative;
     width: 160px;
-    height: 80px;
-    margin: 20px auto;
-    overflow: hidden;
-}
-
-/* Progress arc */
-.semi-circle-fill {
-    width: 160px;
     height: 160px;
-    border-radius: 50%;
-
-    background: conic-gradient(
-        #104137 calc(var(--progress) * 1%),
-        rgba(255,255,255,0.1) 0%
-    );
-
-    transform: rotate(180deg); /* 👈 THIS FIXES START POINT */
-
-    position: absolute;
-    top: 0;
-    left: 0;
+    margin: 0 auto;
 }
 
-/* Hide bottom half */
-.semi-circle::after {
-    content: "";
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 50%;
-    background: #0b0f0f;
+/* Rotate to start from top */
+.progress-circle svg {
+    transform: rotate(-90deg);
 }
 
-/* Text */
-.semi-circle-inner {
+/* Smooth animation */
+.progress-ring {
+    transition: stroke-dashoffset 0.6s ease;
+}
+
+/* Center text */
+.progress-text {
     position: absolute;
-    bottom: 10px;
-    width: 100%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.progress-text h2 {
+    margin: 0;
+    font-size: 28px;
+    color: white;
+}
+
+.progress-ring {
+    filter: drop-shadow(0 0 6px #4f6df5);
+    transition: stroke-dashoffset 1s ease-in-out;
+}
+
+.goal-extra {
+    margin-top: 15px;
+}
+
+/* Stats row */
+.goal-stats {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 10px;
+}
+
+.goal-stats div {
     text-align: center;
-    font-size: 18px;
-    font-weight: bold;
+    font-size: 13px;
 }
 
-.semi-circle-fill.low {
-    background: conic-gradient(#ff4d4d calc(var(--progress) * 1%), rgba(255,255,255,0.1) 0%);
-}
-
-.semi-circle-fill.medium {
-    background: conic-gradient(#f5a623 calc(var(--progress) * 1%), rgba(255,255,255,0.1) 0%);
-}
-
-.semi-circle-fill.high {
-    background: conic-gradient(#104137 calc(var(--progress) * 1%), rgba(255,255,255,0.1) 0%);
+/* Message */
+.goal-message {
+    font-size: 13px;
+    color: #bbb;
 }
 
 .btn.success {

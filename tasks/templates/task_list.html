@@ -102,16 +102,80 @@
         <div class="side-panel">
 
             <div class="goal-tracker">
-            <h4>Goal Progress</h4>
 
-            <div class="semi-circle">
-                <div class="semi-circle-fill" style="--progress: {{ progress }};"></div>
-                <div class="semi-circle-inner">
-                    <span>{{ progress }}%</span>
+            <div class="progress-circle">
+
+                <svg width="160" height="160">
+                    
+                    <!-- Background circle -->
+                    <circle
+                        cx="80"
+                        cy="80"
+                        r="70"
+                        stroke="rgba(255,255,255,0.1)"
+                        stroke-width="10"
+                        fill="none"
+                    />
+
+                    <!-- Progress circle -->
+                    <circle
+                        cx="80"
+                        cy="80"
+                        r="70"
+                        stroke="url(#grad)"
+                        stroke-width="10"
+                        fill="none"
+                        stroke-dasharray="440"
+                        stroke-dashoffset="{{ arc }}"
+                        class="progress-ring"
+                    />
+
+                    <defs>
+                        <linearGradient id="grad">
+                            <stop offset="0%" stop-color="#6a8dff"/>
+                            <stop offset="100%" stop-color="#4f6df5"/>
+                        </linearGradient>
+                    </defs>
+
+                </svg>
+
+                <!-- Center text -->
+                <div class="progress-text">
+                    <h2>{{ progress }}%</h2>
                 </div>
+
             </div>
 
             <p>{{ completed_tasks }} / {{ total_tasks }} tasks done</p>
+
+            <div class="goal-extra">
+
+                <div class="goal-stats">
+                    <div>
+                        <span>✔</span>
+                        <p>{{ completed_tasks }} done</p>
+                    </div>
+
+                    <div>
+                        <span>⏳</span>
+                        <p>{{ pending_tasks }} pending</p>
+                    </div>
+                </div>
+
+                <div class="goal-message">
+                    {% if progress == 0 %}
+                        <p>Let’s get started 🚀</p>
+                    {% elif progress < 50 %}
+                        <p>Good start, keep going 💪</p>
+                    {% elif progress < 100 %}
+                        <p>Almost there 🔥</p>
+                    {% else %}
+                        <p>Perfect! You nailed it 🎯</p>
+                    {% endif %}
+                </div>
+
+            </div>
+
         </div>
 
         </div>

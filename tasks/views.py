@@ -1,3 +1,5 @@
+import math
+
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
@@ -75,13 +77,20 @@ def task_list(request):
     # STATS
     total_tasks = Task.objects.filter(user=request.user).count()
     completed_tasks = Task.objects.filter(user=request.user, status='COMPLETED').count()
-    pending_tasks = Task.objects.filter(user=request.user, status='PENDING').count()
+    pending_tasks = total_tasks - completed_tasks
 
     # Calculate progress %
+    import math
+
+    radius = 70
+    circumference = 2 * math.pi * radius
+
     if total_tasks > 0:
         progress = int((completed_tasks / total_tasks) * 100)
     else:
         progress = 0
+
+    arc = circumference - (circumference * progress / 100)
 
     # 👇 THIS IS WHERE YOU ADD FILTER IN CONTEXT
     context = {
@@ -91,6 +100,7 @@ def task_list(request):
         'completed_tasks': completed_tasks,
         'pending_tasks': pending_tasks,
         'progress': progress,
+        'arc': arc,
     }
 
     return render(request, 'task_list.html', context)  
