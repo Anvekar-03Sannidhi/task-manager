@@ -125,15 +125,17 @@ body {
 
 .main-grid {
     display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 20px;
+    grid-template-columns: 2.2fr 1fr;
+    gap: 25px;
+    align-items: start;
 }
 
 /* ================= TASKS ================= */
 
 .tasks-section {
-    display: grid;
-    gap: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
 .task-card {
@@ -280,7 +282,7 @@ body {
 }
 
 .progress-ring {
-    filter: drop-shadow(0 0 6px #4f6df5);
+    filter: drop-shadow(0 0 6px #104137);
     transition: stroke-dashoffset 1s ease-in-out;
 }
 

@@ -11,26 +11,66 @@
 
 <body>
 
-    <!-- Navbar -->
-    {% if request.path != '/login/' and request.path != '/signup/' %}
+{% if request.path != '/' and request.path != '/login/' and request.path != '/signup/' %}
 
-    <header>
-        <div>
-            <h2>Task Manager</h2>
+<div class="app-layout">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar" id="sidebar">
+
+        <h2 class="sidebar-logo">TaskFlow</h2>
+
+        <a href="/tasks/">My Day</a>
+        <a href="/tasks/?type=DAILY">Daily</a>
+        <a href="/tasks/?type=WEEKLY">Weekly</a>
+        <a href="/tasks/?type=MONTHLY">Monthly</a>
+        <a href="/tasks/?type=YEARLY">Yearly</a>
+
+        <a href="/logout/" class="logout-link">Logout</a>
+
+    </div>
+
+    <!-- MAIN -->
+    <div class="main-area">
+
+        <!-- TOP NAVBAR -->
+        <div class="top-navbar">
+
+            <h3>TaskFlow</h3>
+
+            <div class="nav-right">
+                <span class="user-name">
+                    Hello, {{ request.user.username }}
+                </span>
+            </div>
+
         </div>
-        <div>
-            <a href="/logout/">Logout</a>
-        </div>
-    </header>
 
-    {% endif %}
+        <!-- TOGGLE BUTTON -->
+        <button id="toggle-btn" class="toggle-btn">
+            ☰
+        </button>
 
-    <main>
-        {% block content %}
-        {% endblock %}
-    </main>
+        <main class="main-content">
+            {% block content %}{% endblock %}
+        </main>
 
-    {% block extra_js %}{% endblock %}
+    </div>
+
+</div>
+
+{% else %}
+
+<main class="full-page">
+    {% block auth_content %}{% endblock %}
+</main>
+
+{% endif %}
+
+<script src="{% static 'js/sidebar.js' %}"></script>
+
+{% block extra_js %}{% endblock %}
 
 </body>
+
 </html>

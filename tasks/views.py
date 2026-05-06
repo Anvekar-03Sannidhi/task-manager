@@ -62,6 +62,12 @@ def task_list(request):
     # BASE QUERY
     tasks = Task.objects.filter(user=request.user)
 
+    # SIDEBAR TASK TYPE FILTER
+    task_type = request.GET.get('type')
+
+    if task_type:
+        tasks = tasks.filter(task_type=task_type)
+
     # APPLY FILTER
     if filter_type == "PENDING":
         tasks = tasks.filter(status="PENDING")

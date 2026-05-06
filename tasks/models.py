@@ -15,6 +15,19 @@ class Task(models.Model): #Database table for tasks-> connected to admin panel->
         ('HIGH', 'High'),
     ]
 
+    TASK_TYPES = [
+        ('DAILY', 'Daily'),
+        ('WEEKLY', 'Weekly'),
+        ('MONTHLY', 'Monthly'),
+        ('YEARLY', 'Yearly'),
+    ]
+
+    task_type = models.CharField(
+        max_length=20,
+        choices=TASK_TYPES,
+        default='DAILY'
+    )
+
     title = models.CharField(max_length=200) #short textfield , with max len of 200 chars
     description = models.TextField() #long textfield, no max len
     status = models.CharField(max_length=10, choices=STATUS_CHOICE, default='PENDING') #stores only PENDING or COMPLETED, default is PENDING
@@ -27,3 +40,5 @@ class Task(models.Model): #Database table for tasks-> connected to admin panel->
     
     #ForeignKey creates a relationship between Task and User models,
     user = models.ForeignKey(User, on_delete=models.CASCADE) # on_delete=models.CASCADE means if user is deleted, all their tasks will also be deleted (cascading delete)
+
+    
