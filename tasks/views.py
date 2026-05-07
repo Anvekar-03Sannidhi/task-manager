@@ -1,4 +1,5 @@
 import math
+from urllib import request
 
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
@@ -7,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from .models import Task
 from django.shortcuts import render, redirect
 from django.utils import timezone
+from django.db import models
 
 # Create your views here.
 def home(request):
@@ -65,7 +67,17 @@ def task_list(request):
     # SIDEBAR TASK TYPE FILTER
     task_type = request.GET.get('type')
 
-    if task_type:
+    today = timezone.now().date()
+
+    #My Day
+    if not task_type:
+
+        tasks = tasks.filter(
+            models.Q(task_type='DAILY') | 
+            models.Q(task_type='CUSTOM', custom_date__date=today)
+        )
+        #DAILY/MONTHLY/YEARLY/WEEKLY/CUSTOM
+    else:
         tasks = tasks.filter(task_type=task_type)
 
     # APPLY FILTER
@@ -113,18 +125,23 @@ def task_list(request):
 
 @login_required
 def create_task(request):
+
     if request.method == 'POST':
+
         title = request.POST.get('title')
         description = request.POST.get('description')
         priority = request.POST.get('priority')
-        deadline = request.POST.get('deadline')
+
+        task_type = request.POST.get('task_type')
+        custom_date = request.POST.get('custom_date')
 
         Task.objects.create(
             user=request.user,
             title=title,
             description=description,
             priority=priority,
-            deadline=deadline
+            task_type=task_type,
+            custom_date=custom_date
         )
 
         return redirect('/tasks/')
@@ -140,7 +157,7 @@ def edit_task(request, id):
         task.description = request.POST.get('description')
         task.priority = request.POST.get('priority')
         task.status = request.POST.get('status')
-        task.deadline = request.POST.get('deadline')
+        task.deadline = request.POST.get('deadline') or None
 
         task.save()
         return redirect('/tasks/')
@@ -153,8 +170,9 @@ def delete_task(request, id):
     task.delete()
     return redirect('/tasks/')
 
+@login_required
 def complete_task(request, id):
-    task = Task.objects.get(id=id)
+    task = Task.objects.get(id=id, user=request.user)
     task.status = "COMPLETED"
     task.save()
     return redirect('/tasks/')

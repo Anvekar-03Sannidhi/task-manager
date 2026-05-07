@@ -11,7 +11,7 @@
 
 <body>
 
-{% if request.path != '/' and request.path != '/login/' and request.path != '/signup/' %}
+{% if request.path != '/' and request.path != '/login/' and request.path != '/signup/' and request.path != '/create-task/' and '/edit-task/' not in request.path %}
 
 <div class="app-layout">
 
@@ -25,6 +25,7 @@
         <a href="/tasks/?type=WEEKLY">Weekly</a>
         <a href="/tasks/?type=MONTHLY">Monthly</a>
         <a href="/tasks/?type=YEARLY">Yearly</a>
+        <a href="/tasks/?type=CUSTOM">Custom</a>
 
         <a href="/logout/" class="logout-link">Logout</a>
 
@@ -62,7 +63,7 @@
 {% else %}
 
 <main class="full-page">
-    {% block auth_content %}{% endblock %}
+    {% block simple_content %}{% endblock %}
 </main>
 
 {% endif %}

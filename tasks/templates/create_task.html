@@ -5,7 +5,7 @@
 <link rel="stylesheet" href="{% static 'css/forms.css' %}">
 {% endblock %}
 
-{% block content %}
+{% block simple_content %}
 
 <div class="form-container">
     <div class="form-card">
@@ -24,7 +24,19 @@
                 <option value="HIGH">High</option>
             </select>
 
-            <input type="datetime-local" name="deadline">
+            <!-- TASK TYPE -->
+            <select name="task_type" id="task-type">
+                <option value="DAILY">Daily</option>
+                <option value="WEEKLY">Weekly</option>
+                <option value="MONTHLY">Monthly</option>
+                <option value="YEARLY">Yearly</option>
+                <option value="CUSTOM">Custom</option>
+            </select>
+
+            <!-- CUSTOM DATE -->
+            <div id="custom-date-box" style="display:none;">
+                <input type="date" name="custom_date">
+            </div>
 
             <button type="submit">Create Task</button>
         </form>
@@ -32,4 +44,8 @@
     </div>
 </div>
 
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/create_task.js' %}"></script>
 {% endblock %}
