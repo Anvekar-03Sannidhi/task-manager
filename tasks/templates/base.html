@@ -20,12 +20,35 @@
 
         <h2 class="sidebar-logo">TaskFlow</h2>
 
-        <a href="/tasks/">My Day</a>
-        <a href="/tasks/?type=DAILY">Daily</a>
-        <a href="/tasks/?type=WEEKLY">Weekly</a>
-        <a href="/tasks/?type=MONTHLY">Monthly</a>
-        <a href="/tasks/?type=YEARLY">Yearly</a>
-        <a href="/tasks/?type=CUSTOM">Custom</a>
+        <a href="/tasks/"
+            class="{% if not request.GET.type %}active-link{% endif %}">
+            My Day
+        </a>
+
+        <a href="/tasks/?type=DAILY"
+            class="{% if request.GET.type == 'DAILY' %}active-link{% endif %}">
+            Daily
+        </a>
+
+        <a href="/tasks/?type=WEEKLY"
+            class="{% if request.GET.type == 'WEEKLY' %}active-link{% endif %}">
+            Weekly
+        </a>
+
+        <a href="/tasks/?type=MONTHLY"
+            class="{% if request.GET.type == 'MONTHLY' %}active-link{% endif %}">
+            Monthly
+        </a>
+
+        <a href="/tasks/?type=YEARLY"
+            class="{% if request.GET.type == 'YEARLY' %}active-link{% endif %}">
+            Yearly
+        </a>
+
+        <a href="/tasks/?type=CUSTOM"
+            class="{% if request.GET.type == 'CUSTOM' %}active-link{% endif %}">
+            Custom
+        </a>
 
         <a href="/logout/" class="logout-link">Logout</a>
 

@@ -275,3 +275,10 @@ a {
     opacity: 0;
     visibility: hidden;
 }
+
+.sidebar a.active-link {
+    background-color: #0f5c4d;
+    color: white;
+    border-radius: 10px;
+    padding-left: 12px;
+}

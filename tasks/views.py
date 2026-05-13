@@ -1,119 +1,182 @@
 import math
-from urllib import request
 
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-from .models import Task
-from django.shortcuts import render, redirect
 from django.utils import timezone
-from django.db import models
+from django.db.models import Q
 
-# Create your views here.
+from .models import Task
+
+
+# HOME
 def home(request):
     return render(request, 'home.html')
 
+
+# SIGNUP
 def signup(request):
+
     if request.method == 'POST':
+
         username = request.POST.get('username')
         password = request.POST.get('password')
 
-        User.objects.create_user(username=username, password=password) #create new user in DB
+        User.objects.create_user(
+            username=username,
+            password=password
+        )
+
         return redirect('/login/')
-    
+
     return render(request, 'signup.html')
 
+
+# LOGIN
 def login_view(request):
+
     if request.method == 'POST':
+
         username = request.POST.get('username')
         password = request.POST.get('password')
 
-        print("Username:", username)
-
-        user = authenticate(request, username=username, password=password) #check if user exists and password is correct
-
-        print("User:", user)
+        user = authenticate(
+            request,
+            username=username,
+            password=password
+        )
 
         if user is not None:
+
             login(request, user)
-            
+
             next_url = request.GET.get('next')
-            print("Next URL:", next_url)
 
             if next_url:
                 return redirect(next_url)
-            else:
-                return redirect('/tasks/')
+
+            return redirect('/tasks/')
+
         else:
-            print("Authentication failed")
-            return render(request, 'login.html', {'error':'Invalid Credentials'})
-        
+            return render(
+                request,
+                'login.html',
+                {'error': 'Invalid Credentials'}
+            )
+
     return render(request, 'login.html')
-    
+
+
+# LOGOUT
 def logout_view(request):
-    logout(request) 
+    logout(request)
     return redirect('/login/')
 
+
+# TASK LIST
 @login_required
 def task_list(request):
 
-    # GET FILTER
+    # FILTERS
     filter_type = request.GET.get('filter', 'ALL').upper()
-
-    # BASE QUERY
-    tasks = Task.objects.filter(user=request.user)
-
-    # SIDEBAR TASK TYPE FILTER
     task_type = request.GET.get('type')
 
     today = timezone.now().date()
 
-    #My Day
+    # USER TASKS
+    tasks = Task.objects.filter(user=request.user)
+
+    # MY DAY
     if not task_type:
 
         tasks = tasks.filter(
-            models.Q(task_type='DAILY') | 
-            models.Q(task_type='CUSTOM', custom_date__date=today)
+
+            # DAILY
+            Q(task_type='DAILY')
+
+            |
+
+            # WEEKLY
+            Q(
+                task_type='WEEKLY',
+                created_at__week_day=today.isoweekday()
+            )
+
+            |
+
+            # MONTHLY
+            Q(
+                task_type='MONTHLY',
+                created_at__day=today.day
+            )
+
+            |
+
+            # YEARLY
+            Q(
+                task_type='YEARLY',
+                created_at__month=today.month,
+                created_at__day=today.day
+            )
+
+            |
+
+            # CUSTOM
+            Q(
+                task_type='CUSTOM',
+                custom_date=today
+            )
         )
-        #DAILY/MONTHLY/YEARLY/WEEKLY/CUSTOM
+
+    # SIDEBAR TYPE FILTERS
     else:
         tasks = tasks.filter(task_type=task_type)
 
-    # APPLY FILTER
+    # STATUS FILTERS
     if filter_type == "PENDING":
         tasks = tasks.filter(status="PENDING")
 
     elif filter_type == "COMPLETED":
         tasks = tasks.filter(status="COMPLETED")
 
-    # SEARCH (keep if you already had it)
+    # SEARCH
     search = request.GET.get('search')
+
     if search:
         tasks = tasks.filter(title__icontains=search)
 
     # STATS
-    total_tasks = Task.objects.filter(user=request.user).count()
-    completed_tasks = Task.objects.filter(user=request.user, status='COMPLETED').count()
+    total_tasks = Task.objects.filter(
+        user=request.user
+    ).count()
+
+    completed_tasks = Task.objects.filter(
+        user=request.user,
+        status='COMPLETED'
+    ).count()
+
     pending_tasks = total_tasks - completed_tasks
 
-    # Calculate progress %
-    import math
-
+    # PROGRESS
     radius = 70
     circumference = 2 * math.pi * radius
 
     if total_tasks > 0:
-        progress = int((completed_tasks / total_tasks) * 100)
+        progress = int(
+            (completed_tasks / total_tasks) * 100
+        )
     else:
         progress = 0
 
-    arc = circumference - (circumference * progress / 100)
+    arc = circumference - (
+        circumference * progress / 100
+    )
 
-    # 👇 THIS IS WHERE YOU ADD FILTER IN CONTEXT
+    # CONTEXT
     context = {
         'tasks': tasks,
-        'filter': filter_type,   # ⭐ THIS LINE
+        'filter': filter_type,
         'total_tasks': total_tasks,
         'completed_tasks': completed_tasks,
         'pending_tasks': pending_tasks,
@@ -121,8 +184,14 @@ def task_list(request):
         'arc': arc,
     }
 
-    return render(request, 'task_list.html', context)  
+    return render(
+        request,
+        'task_list.html',
+        context
+    )
 
+
+# CREATE TASK
 @login_required
 def create_task(request):
 
@@ -133,7 +202,7 @@ def create_task(request):
         priority = request.POST.get('priority')
 
         task_type = request.POST.get('task_type')
-        custom_date = request.POST.get('custom_date')
+        custom_date = request.POST.get('custom_date') or None
 
         Task.objects.create(
             user=request.user,
@@ -148,37 +217,73 @@ def create_task(request):
 
     return render(request, 'create_task.html')
 
+
+# EDIT TASK
 @login_required
 def edit_task(request, id):
-    task = Task.objects.get(id=id, user=request.user)
+
+    task = Task.objects.get(
+        id=id,
+        user=request.user
+    )
 
     if request.method == 'POST':
+
         task.title = request.POST.get('title')
         task.description = request.POST.get('description')
         task.priority = request.POST.get('priority')
         task.status = request.POST.get('status')
-        task.deadline = request.POST.get('deadline') or None
 
         task.save()
-        return redirect('/tasks/')
-    
-    return render(request, 'edit_task.html', {'task':task})
 
+        return redirect('/tasks/')
+
+    return render(
+        request,
+        'edit_task.html',
+        {'task': task}
+    )
+
+
+# DELETE TASK
 @login_required
 def delete_task(request, id):
-    task = Task.objects.get(id=id, user=request.user)
+
+    task = Task.objects.get(
+        id=id,
+        user=request.user
+    )
+
     task.delete()
+
     return redirect('/tasks/')
 
+
+# COMPLETE TASK
 @login_required
 def complete_task(request, id):
-    task = Task.objects.get(id=id, user=request.user)
+
+    task = Task.objects.get(
+        id=id,
+        user=request.user
+    )
+
     task.status = "COMPLETED"
     task.save()
+
     return redirect('/tasks/')
 
+
+# SKIP TASK
+@login_required
 def skip_task(request, id):
-    task = Task.objects.get(id=id)
+
+    task = Task.objects.get(
+        id=id,
+        user=request.user
+    )
+
     task.status = "SKIPPED"
     task.save()
+
     return redirect('/tasks/')
