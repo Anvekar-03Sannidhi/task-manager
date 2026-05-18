@@ -81,6 +81,10 @@
                     <span>{{ task.priority }}</span>
                 </div>
 
+                <p class = "next-due">
+                    &#10227; Next due : {{task.next_due|date:"M d, Y"}}
+                </p>
+
                 <div class="task-actions">
 
                     <a href="/edit-task/{{ task.id }}/">Edit</a>

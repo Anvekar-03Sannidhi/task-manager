@@ -84,51 +84,24 @@ def task_list(request):
 
     today = timezone.now().date()
 
+    #tasks still pending today
+    today_tasks = Task.objects.filter(
+        user = request.user,
+        next_due=today
+    )
+
+    #tasks completed today
+    completed_today_tasks = Task.objects.filter(
+        user=request.user,
+        last_completed = today
+    )
+
     # USER TASKS
     tasks = Task.objects.filter(user=request.user)
 
     # MY DAY
     if not task_type:
-
-        tasks = tasks.filter(
-
-            # DAILY
-            Q(task_type='DAILY')
-
-            |
-
-            # WEEKLY
-            Q(
-                task_type='WEEKLY',
-                created_at__week_day=today.isoweekday()
-            )
-
-            |
-
-            # MONTHLY
-            Q(
-                task_type='MONTHLY',
-                created_at__day=today.day
-            )
-
-            |
-
-            # YEARLY
-            Q(
-                task_type='YEARLY',
-                created_at__month=today.month,
-                created_at__day=today.day
-            )
-
-            |
-
-            # CUSTOM
-            Q(
-                task_type='CUSTOM',
-                custom_date=today
-            )
-        )
-
+        tasks = today_tasks        
     # SIDEBAR TYPE FILTERS
     else:
         tasks = tasks.filter(task_type=task_type)
@@ -147,16 +120,13 @@ def task_list(request):
         tasks = tasks.filter(title__icontains=search)
 
     # STATS
-    total_tasks = Task.objects.filter(
-        user=request.user
-    ).count()
+    total_tasks = (
+        today_tasks.count() + completed_today_tasks.count()
+    )
 
-    completed_tasks = Task.objects.filter(
-        user=request.user,
-        status='COMPLETED'
-    ).count()
+    completed_tasks = completed_today_tasks.count()
 
-    pending_tasks = total_tasks - completed_tasks
+    pending_tasks = today_tasks.count()
 
     # PROGRESS
     radius = 70
@@ -190,7 +160,6 @@ def task_list(request):
         context
     )
 
-
 # CREATE TASK
 @login_required
 def create_task(request):
@@ -204,13 +173,23 @@ def create_task(request):
         task_type = request.POST.get('task_type')
         custom_date = request.POST.get('custom_date') or None
 
+        today = timezone.now().date()
+
+        #Set next due
+        if task_type == "CUSTOM":
+            next_due = custom_date
+        else:
+            next_due = today
+
         Task.objects.create(
             user=request.user,
             title=title,
             description=description,
             priority=priority,
             task_type=task_type,
-            custom_date=custom_date
+            custom_date=custom_date,
+            next_due=next_due,
+            status="PENDING"
         )
 
         return redirect('/tasks/')
@@ -268,11 +247,51 @@ def complete_task(request, id):
         user=request.user
     )
 
-    task.status = "COMPLETED"
+    today = timezone.now().date()
+
+    #save completion date
+    task.last_completed = today
+
+    #Daily
+    if task.task_type == "DAILY":
+        task.next_due = today + timezone.timedelta(days=1)
+
+    #weekly
+    elif task.task_type == "WEEKLY":
+        task.next_due = today + timezone.timedelta(days=7)
+    #monthly
+    elif task.task_type == "MONTHLY":
+        if today.month == 12:
+            task.next_due = today.replace(
+                year=today.year + 1,
+                month = 1
+            )
+        else:
+            task.next_due = today.replace(
+                month = today.month + 1
+            )
+    #yearly
+    elif task.task_type == "YEARLY":
+
+        task.next_due = today.replace(
+            year = today.year + 1
+        )
+
+    #custom
+    elif task.task_type == "CUSTOM":
+
+        current_due = task.next_due
+
+        task.next_due = current_due.replace(
+            year = current_due.year + 1
+        )
+    
+    #Reset status
+    task.status = "PENDING"
+
     task.save()
 
     return redirect('/tasks/')
-
 
 # SKIP TASK
 @login_required
@@ -283,7 +302,39 @@ def skip_task(request, id):
         user=request.user
     )
 
-    task.status = "SKIPPED"
+    today = timezone.now().date()
+
+    #Daily
+    if task.task_type == "DAILY":
+        task.next_due = today + timezone.timedelta(days=1)
+
+    #weekly
+    elif task.task_type == "WEEKLY":
+        task.next_due = today + timezone.timedelta(days=7)
+    #monthly
+    elif task.task_type == "MONTHLY":
+        if today.month == 12:
+            task.next_due = today.replace(
+                year = today.year + 1,
+                month=1
+            )
+        else:
+            task.next_due = today.replace(
+                month = today.month + 1
+            )
+    #yearly
+    elif task.task_type == "YEARLY":
+        task.next_due = today.replace(
+            year = today.year + 1
+        )
+    #custom
+    elif task.task_type == "CUSTOM":
+        current_due = task.next_due
+        task.next_due = current_due.replace(
+            year = current_due.year + 1
+        )
+
+    task.last_completed = None
     task.save()
 
     return redirect('/tasks/')
