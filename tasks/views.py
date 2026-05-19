@@ -84,16 +84,19 @@ def task_list(request):
 
     today = timezone.now().date()
 
-    #tasks still pending today
-    today_tasks = Task.objects.filter(
+    all_today_tasks = Task.objects.filter(
         user = request.user,
-        next_due=today
-    )
+    ).filter(
+        Q(next_due=today) | Q(last_completed=today)
+    ).distinct()
 
-    #tasks completed today
-    completed_today_tasks = Task.objects.filter(
-        user=request.user,
-        last_completed = today
+    #pending tasks for today
+    today_tasks = all_today_tasks.filter(
+        next_due=today,
+    )
+    #completed tasks for today
+    completed_today_tasks = all_today_tasks.filter(
+        last_completed=today
     )
 
     # USER TASKS
@@ -120,9 +123,8 @@ def task_list(request):
         tasks = tasks.filter(title__icontains=search)
 
     # STATS
-    total_tasks = (
-        today_tasks.count() + completed_today_tasks.count()
-    )
+    # STATS
+    total_tasks = all_today_tasks.count()
 
     completed_tasks = completed_today_tasks.count()
 
@@ -173,7 +175,7 @@ def create_task(request):
         task_type = request.POST.get('task_type')
         custom_date = request.POST.get('custom_date') or None
 
-        today = timezone.now().date()
+        today = timezone.localdate()
 
         #Set next due
         if task_type == "CUSTOM":
@@ -247,10 +249,12 @@ def complete_task(request, id):
         user=request.user
     )
 
-    today = timezone.now().date()
+    today = timezone.localdate()
 
     #save completion date
     task.last_completed = today
+
+    task.previous_due = task.next_due
 
     #Daily
     if task.task_type == "DAILY":
@@ -287,7 +291,7 @@ def complete_task(request, id):
         )
     
     #Reset status
-    task.status = "PENDING"
+    task.status = "COMPLETED"
 
     task.save()
 
@@ -302,7 +306,7 @@ def skip_task(request, id):
         user=request.user
     )
 
-    today = timezone.now().date()
+    today = timezone.localdate()
 
     #Daily
     if task.task_type == "DAILY":
@@ -335,6 +339,31 @@ def skip_task(request, id):
         )
 
     task.last_completed = None
+    task.save()
+
+    return redirect('/tasks/')
+
+@login_required
+def undo_task(request, id):
+
+    task = Task.objects.get(
+        id=id,
+        user=request.user
+    )
+
+    # restore previous due
+    if task.previous_due:
+        task.next_due = task.previous_due
+
+    # remove completion
+    task.last_completed = None
+
+    # restore pending state
+    task.status = "PENDING"
+
+    # clear previous due
+    task.previous_due = None
+
     task.save()
 
     return redirect('/tasks/')

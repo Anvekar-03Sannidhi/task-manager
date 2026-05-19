@@ -89,11 +89,10 @@
 
                     <a href="/edit-task/{{ task.id }}/">Edit</a>
                     <a href="/delete-task/{{ task.id }}/">Delete</a>
-
                     {% if task.status != "COMPLETED" %}
                         <a href="/complete-task/{{ task.id }}/" class="btn small success">Done</a>
                     {% endif %}
-
+                    <a href="/undo-task/{{ task.id }}/" class="btn small undo">Undo</a>
                     <a href="/skip-task/{{ task.id }}/" class="btn small skip">Skip</a>
 
                 </div>
