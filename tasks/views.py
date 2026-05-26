@@ -87,8 +87,8 @@ def task_list(request):
     #pending tasks for today
     today_tasks = Task.objects.filter(
         user=request.user,
-        next_due=today,
-        status="PENDING"
+        status="PENDING",
+        next_due__lte=today
     )
 
     #completed today
@@ -250,14 +250,16 @@ def complete_task(request, id):
 
     today = timezone.localdate()
 
-    #save previous due
     task.previous_due = task.next_due
 
-    #save completion date as today
     task.last_completed = today
 
     #status
-    task.status = "COMPLETED"
+    if task.task_type == "CUSTOM":
+        task.status = "COMPLETED"
+
+    else:
+        task.status = "PENDING"
 
     #Daily
     if task.task_type == "DAILY":
@@ -312,38 +314,61 @@ def skip_task(request, id):
 
     #Daily
     if task.task_type == "DAILY":
-        task.next_due = today + timezone.timedelta(days=1)
+        if task.next_due < today:
+            task.next_due = today
+        else:
+            task.next_due = today + timezone.timedelta(days=1)
 
     #weekly
     elif task.task_type == "WEEKLY":
-        task.next_due = today + timezone.timedelta(days=7)
+        if task.next_due < today:
+            task.next_due = today
+        else:
+            task.next_due = today + timezone.timedelta(days=7)
 
     #monthly
     elif task.task_type == "MONTHLY":
-        if today.month == 12:
-            task.next_due = today.replace(
-                year = today.year + 1,
-                month=1
-            )
+        if task.next_due < today:
+            task.next_due = today
         else:
-            task.next_due = today.replace(
-                month = today.month + 1
-            )
+
+            if today.month == 12:
+
+                task.next_due = today.replace(
+                    year=today.year + 1,
+                    month=1
+                )
+
+            else:
+
+                task.next_due = today.replace(
+                    month=today.month + 1
+                )
 
     #yearly
     elif task.task_type == "YEARLY":
-        task.next_due = today.replace(
-            year = today.year + 1
-        )
+        if task.next_due < today:
+            task.next_due = today
+        else:
+
+            task.next_due = today.replace(
+                year=today.year + 1
+            )
         
     #custom
     elif task.task_type == "CUSTOM":
-        current_due = task.next_due
-        task.next_due = current_due.replace(
-            year = current_due.year + 1
-        )
+        if task.next_due < today:
+            task.next_due = today
+        else:
 
-    #task.last_completed = None
+            current_due = task.next_due
+
+            task.next_due = current_due.replace(
+                year=current_due.year + 1
+            )
+
+    task.status = "PENDING"
+
     task.save()
 
     return redirect('/tasks/')
@@ -361,14 +386,10 @@ def undo_task(request, id):
     #bring task back today
     task.next_due = today
 
-    #remove completion
     task.last_completed = None
 
-    # restore previous due
     task.next_due = today
 
-
-    #restore pending state
     task.status = "PENDING"
 
     task.save()

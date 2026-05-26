@@ -96,9 +96,22 @@
                     <a href="/skip-task/{{ task.id }}/" class="btn small skip">Skip</a>
 
                 </div>
-                
             </div>
+
+            {% empty %}
+
+            <div class="empty-state">
+
+                <h3>No tasks here....</h3>
+
+                <p>
+                    You're all caught up for now.
+                </p>
+
+            </div>
+
             {% endfor %}
+
         </div>
 
         <!-- RIGHT PANEL -->

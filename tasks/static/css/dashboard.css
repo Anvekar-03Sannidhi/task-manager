@@ -142,7 +142,7 @@ body {
     background: rgba(255,255,255,0.08);
     padding: 15px;
     border-radius: 12px;
-    transition: 0.3s;
+    transition: 0.3s ease;
 }
 
 .task-card:hover {
@@ -165,10 +165,12 @@ body {
     margin-right: 10px;
     font-size: 13px;
     text-decoration: none;
+    transition: 0.2s ease;
 }
 
 .task-actions a:hover {
     text-decoration: underline;
+    transform: scale(1.05);
 }
 
 /* ================= SIDE PANEL ================= */
@@ -247,6 +249,7 @@ body {
     padding: 25px;
     border-radius: 12px;
     text-align: center;
+    backdrop-filter: blur(10px);
 }
 
 /* Circle container */
@@ -316,4 +319,25 @@ body {
 .btn.skip {
     background: rgba(255,255,255,0.1);
     color: white;
+}
+
+.empty-state {
+    width: 100%;
+    padding: 60px 20px;
+    text-align: center;
+
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 20px;
+
+    color: white;
+}
+
+.empty-state h3{
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.empty-state p{
+    opacity: 0.7;
 }

@@ -1,3 +1,7 @@
+html{
+    scroll-behavior: smooth;
+}
+
 body {
     margin: 0;
     font-family: 'Segoe UI', sans-serif;
@@ -162,4 +166,24 @@ a {
 
 .feature-card:hover {
     transform: translateY(-5px);
+}
+
+.about-section{
+    padding: 100px 10%;
+    text-align: center;
+    color: white;
+}
+
+.about-section h2{
+    font-size: 42px;
+    margin-bottom: 20px;
+}
+
+.about-section p{
+    max-width: 700px;
+    margin: auto;
+
+    font-size: 18px;
+    opacity: 0.8;
+    line-height: 1.7;
 }
