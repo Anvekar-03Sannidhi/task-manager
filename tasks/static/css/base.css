@@ -193,21 +193,20 @@ a {
 
 /* Toggle button */
 .toggle-btn {
-    position: fixed;
 
     top: 20px;
     left: 235px;
 
-    width: 42px;
-    height: 42px;
-
-    border-radius: 50%;
     border: none;
+    margin-right: 0;
 
-    background: #104137;
+    background: none;
     color: white;
 
+    font-size: 24px;
+
     cursor: pointer;
+    padding:0;
     z-index: 2000;
 
     transition: 0.3s ease;
@@ -256,18 +255,56 @@ a {
     font-size: 24px;
 }
 
+/*Left section */
+.nav-left{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
 /* Right section */
 .nav-right {
     margin-left: auto;
 
     display: flex;
     align-items: center;
+    gap: 15px;
 }
 
 /* Username */
 .user-name {
-    font-size: 15px;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+/*Logout button in navbar*/
+.navbar-logout {
+
+    color: white !important;
+
+    background: rgba(16, 65, 55, 0.45);
+
+    border: 1px solid rgba(0, 210, 168, 0.15);
+
+    backdrop-filter: blur(12px);
+
+    padding: 7px 16px;
+
+    border-radius: 999px;
+
+    font-size: 14px;
     font-weight: 500;
+
+    transition: all 0.3s ease;
+}
+
+.navbar-logout:hover {
+
+    background: rgba(16, 65, 55, 0.75);
+
+    transform: translateY(-2px);
+
+    box-shadow: 0 0 20px rgba(0, 210, 168, 0.18);
 }
 
 /* Hide logo text when sidebar closes */
@@ -281,4 +318,25 @@ a {
     color: white;
     border-radius: 10px;
     padding-left: 12px;
+}
+
+/*display name*/
+.page-logo {
+    position: fixed;
+    top: 10px;
+    left: 20px;
+
+    color: white;
+    text-decoration: none;
+
+    font-size: 34px;
+    font-weight: 700;
+
+    z-index: 1000;
+
+    text-shadow: 0 0 15px rgba(16, 65, 55, 0.6);
+}
+
+.page-logo:hover {
+    color: #18a58a;
 }

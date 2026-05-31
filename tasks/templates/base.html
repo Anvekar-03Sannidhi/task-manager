@@ -60,20 +60,29 @@
         <!-- TOP NAVBAR -->
         <div class="top-navbar">
 
-            <h3>TaskFlow</h3>
+            <div class="nav-left">
+
+                <button id="toggle-btn" class="toggle-btn">
+                    ☰
+                </button>
+
+                <h3>TaskFlow</h3>
+
+            </div>
 
             <div class="nav-right">
+
                 <span class="user-name">
                     Hello, {{ request.user.username }}
                 </span>
+
+                <a href="/logout/" class="navbar-logout">
+                    Logout
+                </a>
+
             </div>
 
         </div>
-
-        <!-- TOGGLE BUTTON -->
-        <button id="toggle-btn" class="toggle-btn">
-            ☰
-        </button>
 
         <main class="main-content">
             {% block content %}{% endblock %}
@@ -86,6 +95,9 @@
 {% else %}
 
 <main class="full-page">
+
+    <a href="/" class="page-logo">TaskFlow</a>
+
     {% block simple_content %}{% endblock %}
 </main>
 
